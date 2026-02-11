@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SC2 Build Order Helper</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>StarCraft II Build Order Helper</h1>
+        <p>Track your build order with real-time highlighting</p>
+      </header>
+
+      <div class="input-section">
+        <label for="buildOrderInput" class="input-label"
+          >Paste Build Order:</label
+        >
+        <div class="input-group">
+          <textarea
+            id="buildOrderInput"
+            placeholder="Paste your build order here (tab-separated format: Supply, Time, Building/Unit, Notes)&#10;Example:&#10;13	0:22	Spawning Pool&#10;14	0:40	Overlord"
+            class="build-order-input"
+            rows="6"
+          ></textarea>
+        </div>
+        <button id="loadBtn" class="btn btn-load">Load Build Order</button>
+        <div id="error" class="error-message"></div>
+      </div>
+
+      <div id="buildOrderSection" class="build-order-section hidden">
+        <div class="controls">
+          <button id="startBtn" class="btn btn-start">Start Timer</button>
+          <button id="pauseBtn" class="btn btn-pause hidden">
+            Pause Timer
+          </button>
+          <button id="resetBtn" class="btn btn-reset">Reset</button>
+          <button id="decrement5Btn" class="btn btn-increment">-5s</button>
+          <button id="decrement1Btn" class="btn btn-increment">-1s</button>
+          <button id="increment1Btn" class="btn btn-increment">+1s</button>
+          <button id="increment5Btn" class="btn btn-increment">+5s</button>
+          <div class="timer-display">
+            <span id="timerText" class="timer">0:00</span>
+          </div>
+        </div>
+
+        <div class="build-order-list">
+          <table>
+            <thead>
+              <tr>
+                <th>Supply</th>
+                <th>Time</th>
+                <th>Building/Unit</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody id="buildOrderBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="loadingMessage" class="loading-message hidden">
+        Loading build order...
+      </div>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
