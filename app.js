@@ -189,9 +189,18 @@ class BuildOrderHelper {
         workerRow.id = `worker-item-${index}`;
         workerRow.className = "worker-row upcoming-item";
 
+        // Determine drone time
+        let droneTimeSeconds = 0;
+        console.log(index);
+        if (index > 0) {
+          console.log(this.buildOrder[index - 1]);
+          // Use previous item's timeSeconds for all future drones
+          droneTimeSeconds = this.buildOrder[index - 1].timeSeconds + 1;
+        }
+
         workerRow.innerHTML = `
                 <td class="supply">${currentSupply}-${newWorkerSupply}</td>
-                <td class="time"></td>
+                <td class="time">${this.secondsToTimeString(droneTimeSeconds)}</td>
                 <td class="building" style="color: #4caf50;">Drone x${workersNeeded}</td>
                 <td class="notes"></td>
             `;
@@ -201,7 +210,7 @@ class BuildOrderHelper {
         // Add drone to display order with timing before the next item
         displayOrder.push({
           supply: newWorkerSupply,
-          timeSeconds: item.timeSeconds,
+          timeSeconds: droneTimeSeconds,
           building: `Drone x${workersNeeded}`,
           notes: "",
           isDrone: true,
