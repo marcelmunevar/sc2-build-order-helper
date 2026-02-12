@@ -1,120 +1,73 @@
-# SC2 Build Order Helper
+# React + TypeScript + Vite
 
-A web-based tool for StarCraft II players to practice and follow build orders with real-time timer highlights and audio announcements.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## Features
+Currently, two official plugins are available:
 
-- **Real-time Highlighting**: Current build step is highlighted as the timer progresses
-- **Timer Controls**: Start, pause, reset buttons with +1s, +5s, -1s, -5s increment/decrement buttons
-- **Audio Announcements**: Text-to-speech announcements notify you when to build each unit
-- **Intelligent Drone Tracking**: Automatically inserts drone rows based on supply cost calculations
-- **Supply Cost Tracking**: Supports multiple units with accurate supply consumption (e.g., Zergling = 0.5 supply, Swarm Host = 3 supply)
-- **Auto-scrolling**: View automatically scrolls to highlight the current build step
-- **Dark Theme**: Sci-fi inspired UI with cyan accents
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-## Installation
+## React Compiler
 
-1. Clone the repository:
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-```bash
-git clone https://github.com/yourusername/sc2-build-order-helper.git
-cd sc2-build-order-helper
+## Expanding the ESLint configuration
+
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+
+```js
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+
+      // Remove tseslint.configs.recommended and replace with this
+      tseslint.configs.recommendedTypeChecked,
+      // Alternatively, use this for stricter rules
+      tseslint.configs.strictTypeChecked,
+      // Optionally, add this for stylistic rules
+      tseslint.configs.stylisticTypeChecked,
+
+      // Other configs...
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
 ```
 
-2. Install dependencies:
+You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
-```bash
-npm install
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x'
+import reactDom from 'eslint-plugin-react-dom'
+
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+      // Enable lint rules for React
+      reactX.configs['recommended-typescript'],
+      // Enable lint rules for React DOM
+      reactDom.configs.recommended,
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
 ```
-
-## Usage
-
-1. Start the development server:
-
-```bash
-npm start
-```
-
-2. Open your browser (automatically opens at http://localhost:8080)
-
-3. Paste your build order in the textarea using the format:
-
-```
-Supply    Time    Building/Unit    Notes
-12        0:00    Drone x2
-13        0:15    Spawning Pool
-16        1:00    Zergling x2
-20        2:00    Swarm Host x2
-```
-
-4. Click "Start Timer" to begin following the build order
-
-5. Use the control buttons to adjust timing as needed
-
-## Build Order Format
-
-The input expects tab or space-separated columns:
-
-| Column        | Purpose               | Example                           |
-| ------------- | --------------------- | --------------------------------- |
-| Supply        | Target supply count   | 12, 16, 20                        |
-| Time          | When to build (MM:SS) | 0:30, 2:45                        |
-| Building/Unit | What to build         | Drone, Spawning Pool, Zergling x2 |
-| Notes         | Optional notes        | Early pool, All-in                |
-
-**Supported Units/Buildings:**
-
-- Drone, Overlord
-- Swarm Host, Zergling, Queen, Roach, Mutalisk, Ultralisk, Brood Lord
-- Spawning Pool, Extractor, Lair, Hive, Spine Crawler, Spore Crawler
-
-## How Supply Tracking Works
-
-The helper uses supply economics to intelligently insert drone rows:
-
-- **Units consume supply**: Zergling = 0.5, Queen = 2, Roach = 2, Swarm Host = 3, etc.
-- **Buildings tie up drones**: Each building (Spawning Pool, Extractor, etc.) costs -1 supply (one drone is busy)
-- **Automatic drone insertion**: If you need to reach a supply target but don't have enough drones, a row is automatically inserted
-
-Example: Building from supply 16 to 20 with "Zergling x2" (costs 1 supply):
-
-- Current supply after action: 16 + 1 = 17
-- Supply needed: 20
-- Drones to build: 20 - 17 = 3 drones
-
-## Technologies
-
-- **Vanilla JavaScript (ES6+)**: Zero dependencies for portability
-- **HTML5 & CSS3**: Responsive design with flexbox and gradients
-- **Web Speech API**: Browser-native text-to-speech for announcements
-- **http-server**: Local development server
-
-## File Structure
-
-```
-sc2-build-order-helper/
-├── index.html        # HTML structure and UI
-├── app.js            # Core application logic
-├── styles.css        # Styling and theme
-├── package.json      # Project metadata and dependencies
-└── README.md         # This file
-```
-
-## Project Status
-
-Fully functional and ready to use. Features include:
-
-- ✓ Real-time timer with highlighting
-- ✓ Audio announcements
-- ✓ Supply cost calculations
-- ✓ Drone row insertion
-- ✓ Multi-unit parsing (comma-separated items)
-- ✓ Responsive design
-
-## License
-
-MIT
-
-## Contributing
-
-Feel free to submit issues or pull requests to improve the build order helper!
