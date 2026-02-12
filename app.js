@@ -395,6 +395,11 @@ class BuildOrderHelper {
     }
 
     this.currentItemIndex = newCurrentIndex;
+
+    // Stop the timer if we've reached the end
+    if (this.displayOrder && newCurrentIndex === this.displayOrder.length - 1) {
+      this.pauseTimer();
+    }
   }
 
   announce(text) {
