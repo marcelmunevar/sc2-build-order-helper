@@ -161,6 +161,7 @@ header p {
 }
 
 .controls {
+  position: sticky;
   display: flex;
   gap: 15px;
   align-items: center;
@@ -169,6 +170,7 @@ header p {
   background: #0f2438;
   border-radius: 4px;
   border: 1px solid #0f3460;
+  top: 20px;
 }
 
 .timer-display {
