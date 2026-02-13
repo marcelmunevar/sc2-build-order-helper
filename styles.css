@@ -171,6 +171,7 @@ header p {
   border-radius: 4px;
   border: 1px solid #0f3460;
   top: 20px;
+  z-index: 10;
 }
 
 .timer-display {
