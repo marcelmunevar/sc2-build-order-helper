@@ -1,45 +1,61 @@
 // Supply cost table for StarCraft II units and buildings
 const SUPPLY_COSTS = {
   // Workers
+  adept: 2,
+  archon: 4,
+  baneling: 0.5,
+  banshee: 3,
+  battlecruiser: 6,
+  "brood lord": 2,
+  carrier: 6,
+  colossus: 6,
+  corruptor: 2,
+  cyclone: 2,
+  "dark templar": 2,
+  disruptor: 4,
   drone: 1,
-  worker: 1,
-  scv: 1,
+  ghost: 2,
+  hellbat: 2,
+  hellion: 2,
+  "high templar": 2,
+  hydralisk: 2,
+  immortal: 4,
+  infestor: 2,
+  liberator: 3,
+  lurker: 1,
+  marauder: 2,
+  marine: 1,
+  medivac: 2,
+  mothership: 6,
+  mutalisk: 2,
+  observer: 1,
+  oracle: 3,
+  phoenix: 2,
   probe: 1,
-
-  // Overlords/Overseers
-  overlord: 0,
-  overseer: 0,
-
-  // Zerglings
-  zergling: 0.5,
-
-  // Queens
   queen: 2,
-
-  // Roaches
+  ravager: 1,
+  raven: 2,
+  reaper: 1,
   roach: 2,
-
-  // Swarm Hosts
+  scv: 1,
+  sentry: 2,
+  "siege tank": 3,
+  stalker: 2,
   "swarm host": 3,
+  tempest: 5,
+  thor: 6,
+  ultralisk: 6,
+  viking: 2,
+  viper: 3,
+  "void ray": 4,
+  "warp prism": 2,
+  "widow mine": 2,
+  zealot: 2,
+  zergling: 0.5,
 
   // Spine/Spore Crawlers
   "spine crawler": -1,
   "spore crawler": -1,
-
-  // Mutalisk
-  mutalisk: 3,
-
-  // Baneling
-  baneling: 1,
-
-  // Infestor
-  infestor: 2,
-
-  // Ultralisk
-  ultralisk: 4,
-
-  // Brood Lord
-  "brood lord": 4,
 
   // Hatchery
   hatchery: -1,
@@ -201,7 +217,7 @@ class BuildOrderHelper {
         workerRow.innerHTML = `
                 <td class="supply">${currentSupply}-${newWorkerSupply}</td>
                 <td class="time">${this.secondsToTimeString(droneTimeSeconds)}</td>
-                <td class="building" style="color: #4caf50;">Drone x${workersNeeded}</td>
+                <td class="building" style="color: #4caf50;">Worker x${workersNeeded}</td>
                 <td class="notes"></td>
             `;
 
@@ -211,7 +227,7 @@ class BuildOrderHelper {
         displayOrder.push({
           supply: newWorkerSupply,
           timeSeconds: droneTimeSeconds,
-          building: `Drone x${workersNeeded}`,
+          building: `Worker x${workersNeeded}`,
           notes: "",
           isDrone: true,
           htmlId: `worker-item-${index}`,
@@ -291,8 +307,8 @@ class BuildOrderHelper {
         }
       }
 
-      // Default to 1 if not found
-      totalCost += 1;
+      // Default to 0 if not found
+      totalCost += 0;
     });
 
     return totalCost;
