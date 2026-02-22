@@ -348,6 +348,7 @@ class BuildOrderHelper {
     document.querySelectorAll("#buildOrderBody tr").forEach((row) => {
       row.className = "upcoming-item";
     });
+    this.updateTimer();
   }
 
   incrementTime(seconds) {
