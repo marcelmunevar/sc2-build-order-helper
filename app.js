@@ -421,7 +421,7 @@ class BuildOrderHelper {
 
   announce(text) {
     // Cancel any ongoing speech
-    window.speechSynthesis.cancel();
+    //window.speechSynthesis.cancel();
 
     // Create new utterance
     const utterance = new SpeechSynthesisUtterance(text);
