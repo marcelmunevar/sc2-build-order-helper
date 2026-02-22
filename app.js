@@ -53,21 +53,21 @@ const SUPPLY_COSTS = {
   zealot: 2,
   zergling: 0.5,
 
-  // Spine/Spore Crawlers
+  //buildings
   "spine crawler": -1,
   "spore crawler": -1,
-
-  // Hatchery
   hatchery: -1,
-
-  // Buildings (no supply cost)
   "spawning pool": -1,
   extractor: -1,
-  lair: 0,
-  hive: 0,
   "infestation pit": -1,
   "nydus network": -1,
-  "nydus canal": 0,
+  "evolution chamber": -1,
+  "hydralisk den": -1,
+  "lurker den": -1,
+  "ultralisk cavern": -1,
+  "baneling nest": -1,
+  "roach warren": -1,
+  spire: -1,
 };
 
 class BuildOrderHelper {
