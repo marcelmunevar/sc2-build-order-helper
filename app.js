@@ -294,7 +294,6 @@ class BuildOrderHelper {
       }
 
       // Check for partial matches
-      /*
       for (const [unit, cost] of Object.entries(SUPPLY_COSTS)) {
         if (itemLower.includes(unit)) {
           let finalCost = cost;
@@ -307,7 +306,6 @@ class BuildOrderHelper {
           return;
         }
       }
-      */
 
       // Default to 0 if not found
       totalCost += 0;
