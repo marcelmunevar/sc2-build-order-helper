@@ -1,45 +1,82 @@
 import { useEffect, useState } from "react";
 import "./App.css";
+import InputSection from "./components/InputSection";
+import type { BuildOrderItem } from "./components/InputSection";
 
 const SUPPLY_COSTS = {
+  // units
+  adept: 2,
+  archon: 4,
+  baneling: 0.5,
+  banshee: 3,
+  battlecruiser: 6,
+  "brood lord": 2,
+  carrier: 6,
+  colossus: 6,
+  corruptor: 2,
+  cyclone: 2,
+  "dark templar": 2,
+  disruptor: 4,
   drone: 1,
-  worker: 1,
-  scv: 1,
+  ghost: 2,
+  hellbat: 2,
+  hellion: 2,
+  "high templar": 2,
+  hydralisk: 2,
+  immortal: 4,
+  infestor: 2,
+  liberator: 3,
+  lurker: 1,
+  marauder: 2,
+  marine: 1,
+  medivac: 2,
+  mothership: 6,
+  mutalisk: 2,
+  observer: 1,
+  oracle: 3,
+  phoenix: 2,
   probe: 1,
-  overlord: 0,
-  overseer: 0,
-  zergling: 0.5,
   queen: 2,
+  ravager: 1,
+  raven: 2,
+  reaper: 1,
   roach: 2,
+  scv: 1,
+  sentry: 2,
+  "siege tank": 3,
+  stalker: 2,
   "swarm host": 3,
+  tempest: 5,
+  thor: 6,
+  ultralisk: 6,
+  viking: 2,
+  viper: 3,
+  "void ray": 4,
+  "warp prism": 2,
+  "widow mine": 2,
+  zealot: 2,
+  zergling: 0.5,
+
+  //buildings
   "spine crawler": -1,
   "spore crawler": -1,
-  mutalisk: 3,
-  baneling: 1,
-  infestor: 2,
-  ultralisk: 4,
-  "brood lord": 4,
   hatchery: -1,
   "spawning pool": -1,
   extractor: -1,
-  lair: 0,
-  hive: 0,
   "infestation pit": -1,
   "nydus network": -1,
-  "nydus canal": 0,
+  "evolution chamber": -1,
+  "hydralisk den": -1,
+  "lurker den": -1,
+  "ultralisk cavern": -1,
+  "baneling nest": -1,
+  "roach warren": -1,
+  spire: -1,
 };
 
 function App() {
   const [inputText, setInputText] = useState("");
-  const [buildOrder, setBuildOrder] = useState<
-    {
-      supply: number;
-      time: string;
-      name: string;
-      notes: string;
-      timeSeconds: number;
-    }[]
-  >([]);
+  const [buildOrder, setBuildOrder] = useState<BuildOrderItem[]>([]);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
 
@@ -67,50 +104,9 @@ function App() {
     return parts[0] * 60 + (parts[1] || 0);
   };
 
-  // Build order parsing function
-  const parseBuildOrder = (text: string) => {
-    setBuildOrder([]);
-    const lines = text.split("\n").filter((line) => line.trim());
-    const buildOrder: {
-      supply: number;
-      time: string;
-      name: string;
-      notes: string;
-      timeSeconds: number;
-    }[] = [];
-
-    lines.forEach((line) => {
-      // Split by tabs or multiple spaces
-      const parts = line
-        .split(/\t+|\s{2,}/)
-        .map((p) => p.trim())
-        .filter((p) => p);
-
-      if (parts.length >= 3) {
-        const supply = parseInt(parts[0], 10);
-        const timeStr = parts[1];
-        const building = parts[2];
-        const notes = parts.length > 3 ? parts.slice(3).join(" ") : "";
-
-        if (!isNaN(supply) && timeStr) {
-          buildOrder.push({
-            supply: supply,
-            time: timeStr,
-            name: building,
-            notes: notes,
-            timeSeconds: parseTime(timeStr),
-          });
-        }
-      }
-    });
-
-    if (buildOrder.length === 0) {
-      throw new Error("No build steps found. Please check the format.");
-    }
-
-    // Sort by time
-    buildOrder.sort((a, b) => a.timeSeconds - b.timeSeconds);
-    setBuildOrder(buildOrder);
+  // Callback to receive parsed build order from InputSection
+  const handleBuildOrderParsed = (parsedBuildOrder: BuildOrderItem[]) => {
+    setBuildOrder(parsedBuildOrder);
   };
 
   // Timer control functions
@@ -126,9 +122,6 @@ function App() {
   const incrementTime = (amount: number) => {
     setElapsedSeconds((prev) => prev + amount);
   };
-  const loadBuildOrder = () => {
-    parseBuildOrder(inputText);
-  };
 
   return (
     <div className="container">
@@ -137,24 +130,12 @@ function App() {
         <p>Track your build order with real-time highlighting</p>
       </header>
 
-      <div className="input-section">
-        <label htmlFor="buildOrderInput" className="input-label">
-          Paste Build Order:
-        </label>
-        <div className="input-group">
-          <textarea
-            value={inputText}
-            onChange={(e) => setInputText(e.target.value)}
-            placeholder="Paste your build order here (tab-separated format: Supply, Time, Building/Unit, Notes)&#10;Example:&#10;13	0:22	Spawning Pool&#10;14	0:40	Overlord"
-            className="build-order-input"
-            rows={6}
-          ></textarea>
-        </div>
-        <button onClick={loadBuildOrder} className="btn btn-load">
-          Load Build Order
-        </button>
-        <div id="error" className="error-message"></div>
-      </div>
+      <InputSection
+        inputText={inputText}
+        setInputText={setInputText}
+        onBuildOrderParsed={handleBuildOrderParsed}
+        parseTime={parseTime}
+      />
 
       <div id="buildOrderSection" className="build-order-section">
         <div className="controls">
