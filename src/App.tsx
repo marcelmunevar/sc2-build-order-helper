@@ -94,7 +94,10 @@ function App() {
   // Timer control functions
   const startTimer = () => setIsRunning(true);
   const pauseTimer = () => setIsRunning(false);
-  const resetTimer = () => setElapsedSeconds(0);
+  const resetTimer = () => {
+    setElapsedSeconds(0);
+    pauseTimer();
+  };
   const incrementTime = (amount: number) =>
     setElapsedSeconds((prev) => prev + amount);
 
