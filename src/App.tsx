@@ -79,14 +79,26 @@ function App() {
   const [inputText, setInputText] = useState("");
   const [buildOrder, setBuildOrder] = useState<BuildOrderItem[]>([]);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
+  const [isRunning, setIsRunning] = useState(false);
+
+  // Timer logic
+  useEffect(() => {
+    if (!isRunning) return;
+    const timer = setInterval(() => {
+      setElapsedSeconds((prev) => prev + 1);
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [isRunning]);
+
+  // Timer control functions
+  const startTimer = () => setIsRunning(true);
+  const pauseTimer = () => setIsRunning(false);
+  const resetTimer = () => setElapsedSeconds(0);
+  const incrementTime = (amount: number) => setElapsedSeconds((prev) => prev + amount);
 
   // Callback to receive parsed build order from InputSection
   const handleBuildOrder = (parsedBuildOrder: BuildOrderItem[]) => {
     setBuildOrder(parsedBuildOrder);
-  };
-
-  const handleElapsedSecondsChange = (seconds: number) => {
-    setElapsedSeconds(seconds);
   };
 
   return (
@@ -103,7 +115,14 @@ function App() {
       />
 
       <div id="buildOrderSection" className="build-order-section">
-        <Controls onElapsedSecondsChange={handleElapsedSecondsChange} />
+        <Controls
+          elapsedSeconds={elapsedSeconds}
+          isRunning={isRunning}
+          startTimer={startTimer}
+          pauseTimer={pauseTimer}
+          resetTimer={resetTimer}
+          incrementTime={incrementTime}
+        />
 
         <div className="build-order-list">
           <table>

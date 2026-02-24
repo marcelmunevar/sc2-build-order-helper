@@ -1,29 +1,22 @@
-import { useEffect, useState } from "react";
+import React from "react";
 
 type ControlsProps = {
-  onElapsedSecondsChange: (seconds: number) => void;
+  elapsedSeconds: number;
+  isRunning: boolean;
+  startTimer: () => void;
+  pauseTimer: () => void;
+  resetTimer: () => void;
+  incrementTime: (amount: number) => void;
 };
 
-const Controls: React.FC<ControlsProps> = ({ onElapsedSecondsChange }) => {
-  const [elapsedSeconds, setElapsedSeconds] = useState(0);
-  const [isRunning, setIsRunning] = useState(false);
-
-  // Timer logic (useEffect for interval)
-  useEffect(() => {
-    if (!isRunning) return;
-
-    const timer = setInterval(() => {
-      setElapsedSeconds((prev) => prev + 1);
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [isRunning]);
-
-  // Sync elapsedSeconds with parent
-  useEffect(() => {
-    onElapsedSecondsChange(elapsedSeconds);
-  }, [elapsedSeconds, onElapsedSecondsChange]);
-
+const Controls: React.FC<ControlsProps> = ({
+  elapsedSeconds,
+  isRunning,
+  startTimer,
+  pauseTimer,
+  resetTimer,
+  incrementTime,
+}) => {
   // Format seconds to MM:SS
   const formatTime = (seconds: number): string => {
     const minutes = Math.floor(seconds / 60);
@@ -31,25 +24,20 @@ const Controls: React.FC<ControlsProps> = ({ onElapsedSecondsChange }) => {
     return `${minutes}:${secs.toString().padStart(2, "0")}`;
   };
 
-  // Timer control functions
-  const startTimer = () => {
-    setIsRunning(true);
-  };
-  const pauseTimer = () => {
-    setIsRunning(false);
-  };
-  const resetTimer = () => {
-    setElapsedSeconds(0);
-  };
-  const incrementTime = (amount: number) => {
-    setElapsedSeconds((prev) => prev + amount);
-  };
   return (
     <div className="controls">
-      <button onClick={startTimer} className="btn btn-start">
+      <button
+        onClick={startTimer}
+        className="btn btn-start"
+        disabled={isRunning}
+      >
         Start Timer
       </button>
-      <button onClick={pauseTimer} className="btn btn-pause">
+      <button
+        onClick={pauseTimer}
+        className="btn btn-pause"
+        disabled={!isRunning}
+      >
         Pause Timer
       </button>
       <button onClick={resetTimer} className="btn btn-reset">
