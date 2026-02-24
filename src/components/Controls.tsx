@@ -28,14 +28,14 @@ const Controls: React.FC<ControlsProps> = ({
     <div className="controls">
       <button
         onClick={startTimer}
-        className="btn btn-start"
+        className={`btn btn-start ${isRunning ? "hidden" : ""}`}
         disabled={isRunning}
       >
         Start Timer
       </button>
       <button
         onClick={pauseTimer}
-        className="btn btn-pause"
+        className={`btn btn-pause ${isRunning ? "" : "hidden"}`}
         disabled={!isRunning}
       >
         Pause Timer

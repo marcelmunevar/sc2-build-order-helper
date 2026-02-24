@@ -141,9 +141,9 @@ header p {
   min-height: 20px;
 }
 
-/*.hidden {
+.hidden {
   display: none !important;
-}*/
+}
 
 .build-order-section {
   animation: slideIn 0.3s ease;
