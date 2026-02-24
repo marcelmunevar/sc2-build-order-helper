@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import InputSection from "./components/InputSection";
 import type { BuildOrderItem } from "./components/InputSection";
+import Controls from "./components/Controls";
 
 const SUPPLY_COSTS = {
   // units
@@ -78,49 +79,14 @@ function App() {
   const [inputText, setInputText] = useState("");
   const [buildOrder, setBuildOrder] = useState<BuildOrderItem[]>([]);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
-  const [isRunning, setIsRunning] = useState(false);
-
-  // Timer logic (useEffect for interval)
-  useEffect(() => {
-    if (!isRunning) return;
-
-    const timer = setInterval(() => {
-      setElapsedSeconds((prev) => prev + 1);
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [isRunning]);
-
-  // Format seconds to MM:SS
-  const formatTime = (seconds: number): string => {
-    const minutes = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${minutes}:${secs.toString().padStart(2, "0")}`;
-  };
-
-  // Parse time string (MM:SS) to seconds
-  const parseTime = (timeString: string): number => {
-    const parts = timeString.split(":").map(Number);
-    return parts[0] * 60 + (parts[1] || 0);
-  };
 
   // Callback to receive parsed build order from InputSection
-  const handleBuildOrderParsed = (parsedBuildOrder: BuildOrderItem[]) => {
+  const handleBuildOrder = (parsedBuildOrder: BuildOrderItem[]) => {
     setBuildOrder(parsedBuildOrder);
   };
 
-  // Timer control functions
-  const startTimer = () => {
-    setIsRunning(true);
-  };
-  const pauseTimer = () => {
-    setIsRunning(false);
-  };
-  const resetTimer = () => {
-    setElapsedSeconds(0);
-  };
-  const incrementTime = (amount: number) => {
-    setElapsedSeconds((prev) => prev + amount);
+  const handleElapsedSecondsChange = (seconds: number) => {
+    setElapsedSeconds(seconds);
   };
 
   return (
@@ -133,51 +99,11 @@ function App() {
       <InputSection
         inputText={inputText}
         setInputText={setInputText}
-        onBuildOrderParsed={handleBuildOrderParsed}
-        parseTime={parseTime}
+        onBuildOrder={handleBuildOrder}
       />
 
       <div id="buildOrderSection" className="build-order-section">
-        <div className="controls">
-          <button onClick={startTimer} className="btn btn-start">
-            Start Timer
-          </button>
-          <button onClick={pauseTimer} className="btn btn-pause">
-            Pause Timer
-          </button>
-          <button onClick={resetTimer} className="btn btn-reset">
-            Reset
-          </button>
-          <button
-            onClick={() => incrementTime(-5)}
-            className="btn btn-increment"
-          >
-            -5s
-          </button>
-          <button
-            onClick={() => incrementTime(-1)}
-            className="btn btn-increment"
-          >
-            -1s
-          </button>
-          <button
-            onClick={() => incrementTime(1)}
-            className="btn btn-increment"
-          >
-            +1s
-          </button>
-          <button
-            onClick={() => incrementTime(5)}
-            className="btn btn-increment"
-          >
-            +5s
-          </button>
-          <div className="timer-display">
-            <span id="timerText" className="timer">
-              {formatTime(elapsedSeconds)}
-            </span>
-          </div>
-        </div>
+        <Controls onElapsedSecondsChange={handleElapsedSecondsChange} />
 
         <div className="build-order-list">
           <table>

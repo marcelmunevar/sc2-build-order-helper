@@ -11,17 +11,21 @@ export type BuildOrderItem = {
 type InputSectionProps = {
   inputText: string;
   setInputText: React.Dispatch<React.SetStateAction<string>>;
-  onBuildOrderParsed: (parsedBuildOrder: BuildOrderItem[]) => void;
-  parseTime: (timeString: string) => number;
+  onBuildOrder: (parsedBuildOrder: BuildOrderItem[]) => void;
 };
 
 const InputSection: React.FC<InputSectionProps> = ({
   inputText,
   setInputText,
-  onBuildOrderParsed,
-  parseTime,
+  onBuildOrder,
 }) => {
   const [error, setError] = useState<string | null>(null);
+
+  // Parse time string (MM:SS) to seconds
+  const parseTime = (timeString: string): number => {
+    const parts = timeString.split(":").map(Number);
+    return parts[0] * 60 + (parts[1] || 0);
+  };
 
   const parseBuildOrder = (text: string) => {
     const lines = text.split("\n").filter((line) => line.trim());
@@ -65,10 +69,10 @@ const InputSection: React.FC<InputSectionProps> = ({
     setError(null);
     try {
       const parsed = parseBuildOrder(inputText);
-      onBuildOrderParsed(parsed);
+      onBuildOrder(parsed);
     } catch (e: any) {
       setError(e.message || "Failed to parse build order.");
-      onBuildOrderParsed([]); // Clear build order on error
+      onBuildOrder([]); // Clear build order on error
     }
   };
 
