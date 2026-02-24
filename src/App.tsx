@@ -94,12 +94,23 @@ function App() {
   const startTimer = () => setIsRunning(true);
   const pauseTimer = () => setIsRunning(false);
   const resetTimer = () => setElapsedSeconds(0);
-  const incrementTime = (amount: number) => setElapsedSeconds((prev) => prev + amount);
+  const incrementTime = (amount: number) =>
+    setElapsedSeconds((prev) => prev + amount);
 
   // Callback to receive parsed build order from InputSection
   const handleBuildOrder = (parsedBuildOrder: BuildOrderItem[]) => {
     setBuildOrder(parsedBuildOrder);
   };
+
+  const currentIndex = buildOrder.findIndex(
+    (item) => elapsedSeconds < item.timeSeconds,
+  );
+  const highlightIndex =
+    currentIndex === 0
+      ? 0
+      : currentIndex === -1
+        ? buildOrder.length - 1
+        : currentIndex - 1;
 
   return (
     <div className="container">
@@ -138,7 +149,7 @@ function App() {
               {buildOrder.map((item, index) => (
                 <tr
                   key={index}
-                  className={elapsedSeconds >= item.timeSeconds ? "active" : ""}
+                  className={index === highlightIndex ? "current-item" : ""}
                 >
                   <td>{item.supply}</td>
                   <td>{item.time}</td>
