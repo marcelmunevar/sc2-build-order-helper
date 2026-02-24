@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import "./App.css";
 import InputSection from "./components/InputSection";
 import type { BuildOrderItem } from "./components/InputSection";
@@ -80,6 +80,7 @@ function App() {
   const [buildOrder, setBuildOrder] = useState<BuildOrderItem[]>([]);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
+  const [highlightIndex, setHighlightIndex] = useState(0);
 
   // Timer logic
   useEffect(() => {
@@ -102,15 +103,42 @@ function App() {
     setBuildOrder(parsedBuildOrder);
   };
 
-  const currentIndex = buildOrder.findIndex(
-    (item) => elapsedSeconds < item.timeSeconds,
-  );
-  const highlightIndex =
-    currentIndex === 0
-      ? 0
-      : currentIndex === -1
-        ? buildOrder.length - 1
-        : currentIndex - 1;
+  const announce = (text: string) => {
+    // Create new utterance
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 1;
+    utterance.pitch = 1;
+    utterance.volume = 1;
+
+    // Speak the text
+    window.speechSynthesis.speak(utterance);
+  };
+
+  // Side effects: announce only once per highlight
+  const lastAnnouncedIndex = useRef(-1);
+  useEffect(() => {
+    // Find the current item index
+    const currentIndex = buildOrder.findIndex(
+      (item) => elapsedSeconds < item.timeSeconds,
+    );
+    const newHighlightIndex =
+      currentIndex === 0
+        ? 0
+        : currentIndex === -1
+          ? buildOrder.length - 1
+          : currentIndex - 1;
+
+    setHighlightIndex(newHighlightIndex);
+
+    // Only announce if highlightIndex changed
+    if (
+      buildOrder[newHighlightIndex] &&
+      lastAnnouncedIndex.current !== newHighlightIndex
+    ) {
+      announce(buildOrder[newHighlightIndex].name);
+      lastAnnouncedIndex.current = newHighlightIndex;
+    }
+  }, [elapsedSeconds, buildOrder]);
 
   return (
     <div className="container">
